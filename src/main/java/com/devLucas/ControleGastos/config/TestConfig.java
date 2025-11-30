@@ -11,7 +11,9 @@ import org.springframework.context.annotation.Profile;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Scanner;
 
 @Configuration
@@ -104,14 +106,116 @@ public class TestConfig implements CommandLineRunner {
                         break;
 
                     case 2:
-                        System.out.println("\n=== LISTAGEM DE TÍTULOS ===");
-                        accountsRepository.findAll().forEach(System.out::println);
+                        System.out.println("\n=== Lista de Títulos ===");
+
+                        List<AccountsPayable> contas = accountsRepository.findAll();
+
+                        if (contas.isEmpty()) {
+                            System.out.println("Nenhum título encontrado.");
+                        } else {
+                            for (AccountsPayable c : contas) {
+                                System.out.println(
+                                        "ID: " + c.getId() +
+                                                " | Nome: " + c.getTitle() +
+                                                " | Valor: " + c.getAmount() +
+                                                " | Vencimento: " + c.getDueDate() +
+                                                " | Loja: " + c.getStore() +
+                                                " | Situação: " + c.getSituation()
+                                );
+                            }
+                        }
                         break;
 
                     case 3:
-                        System.out.println("Função de modificação ainda não implementada.");
-                        break;
+                        System.out.println("\n=== MODIFICAÇÃO DE TÍTULO ===");
+                        System.out.print("Digite o ID do título que deseja modificar: ");
 
+                        long id = sc.nextLong();
+                        sc.nextLine();
+
+                        Optional<AccountsPayable> opt = accountsRepository.findById(id);
+
+                        if (opt.isEmpty()) {
+                            System.out.println("Título não encontrado!");
+                            break; // <-- usado no lugar de return
+                        }
+
+                        AccountsPayable conta = opt.get();
+
+                        System.out.println("\nTítulo encontrado:");
+                        System.out.println("1. Nome: " + conta.getTitle());
+                        System.out.println("2. Valor: " + conta.getAmount());
+                        System.out.println("3. Vencimento: " + conta.getDueDate());
+                        System.out.println("4. Loja: " + conta.getStore());
+                        System.out.println("5. Situação: " + conta.getSituation());
+                        System.out.println("--------------------------------------");
+
+                        System.out.println("Qual campo deseja alterar?");
+                        System.out.println("1 - Nome");
+                        System.out.println("2 - Valor");
+                        System.out.println("3 - Data de vencimento");
+                        System.out.println("4 - Loja");
+                        System.out.println("5 - Situação");
+                        System.out.println("6 - Cancelar");
+
+                        System.out.print("Escolha: ");
+                        int opc = sc.nextInt();
+                        sc.nextLine();
+
+                        switch (opc) {
+
+                            case 1:
+                                System.out.print("Novo nome: ");
+                                conta.setTitle(sc.nextLine());
+                                break;
+
+                            case 2:
+                                System.out.print("Novo valor: ");
+                                conta.setAmount(sc.nextDouble());
+                                sc.nextLine();
+                                break;
+
+                            case 3:
+                                System.out.print("Nova data (dd/MM/yyyy): ");
+                                String dataDigitada2 = sc.nextLine();
+                                try {
+                                    LocalDate novaData = LocalDate.parse(dataDigitada2, fmt);
+                                    conta.setDueDate(novaData);
+                                } catch (DateTimeParseException e) {
+                                    System.out.println("Data inválida! Alteração cancelada.");
+                                    break;
+                                }
+                                break;
+
+                            case 4:
+                                System.out.print("Nova loja: ");
+                                conta.setStore(sc.nextLine());
+                                break;
+
+                            case 5:
+                                System.out.println("Situação (PENDENTE / PAGO / ATRASADO): ");
+                                String sit = sc.nextLine().toUpperCase();
+                                try {
+                                    currentSituation newSit = currentSituation.valueOf(sit);
+                                    conta.setSituation(newSit);
+                                } catch (IllegalArgumentException e) {
+                                    System.out.println("Situação inválida! Alteração cancelada.");
+                                    break;
+                                }
+                                break;
+
+                            case 6:
+                                System.out.println("Operação cancelada.");
+                                break;
+
+                            default:
+                                System.out.println("Opção inválida.");
+                                break;
+                        }
+
+                        accountsRepository.save(conta);
+                        System.out.println("Título modificado com sucesso!");
+                        break;
                     case 4:
                         System.out.println("Saindo do sistema...");
                         break;

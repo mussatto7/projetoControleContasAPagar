@@ -1,16 +1,11 @@
 package com.devLucas.ControleGastos.entity;
 
+import com.devLucas.ControleGastos.entity.enums.currentSituation;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
-
-import com.devLucas.ControleGastos.entity.enums.currentSituation;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_accounts")
@@ -107,4 +102,15 @@ public class AccountsPayable implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
+    @Override
+    public String toString() {
+        return "AccountsPayable{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", amount=" + amount +
+                ", dueDate=" + dueDate +
+                ", store='" + store + '\'' +
+                ", situation=" + situation +
+                '}';
+    }
 }
