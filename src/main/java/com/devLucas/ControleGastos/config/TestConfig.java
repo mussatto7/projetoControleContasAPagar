@@ -127,7 +127,7 @@ public class TestConfig implements CommandLineRunner {
                         break;
 
                     case 3:
-                        System.out.println("\n=== MODIFICAÇÃO DE TÍTULO ===");
+                        System.out.println("\n=== Alteração de Títulos ===");
                         System.out.print("Digite o ID do título que deseja modificar: ");
 
                         long id = sc.nextLong();
@@ -206,6 +206,7 @@ public class TestConfig implements CommandLineRunner {
 
                             case 6:
                                 System.out.println("Operação cancelada.");
+
                                 break;
 
                             default:
@@ -228,5 +229,5 @@ public class TestConfig implements CommandLineRunner {
         }
 
         sc.close();
-    }
+         }
 }
