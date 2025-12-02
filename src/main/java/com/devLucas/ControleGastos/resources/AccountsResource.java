@@ -14,38 +14,43 @@ import java.util.List;
 @RequestMapping(value = "/accounts")
 public class AccountsResource {
 
-	@Autowired
-	private AccountsService service;
+    @Autowired
+    private AccountsService service;
 
-	@GetMapping
-	public ResponseEntity<List<AccountsPayable>> findAll() {
-		List<AccountsPayable> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+    // FindAll
+    @GetMapping
+    public ResponseEntity<List<AccountsPayable>> findAll() {
+        List<AccountsPayable> list = service.findAll();
+        return ResponseEntity.ok().body(list);
 
-	}
+    }
 
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<AccountsPayable> findById(@PathVariable Long id) {
-		AccountsPayable obj = service.findById(id);
-		return ResponseEntity.ok().body(obj);
-	}
+    // FindById
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<AccountsPayable> findById(@PathVariable Long id) {
+        AccountsPayable obj = service.findById(id);
+        return ResponseEntity.ok().body(obj);
+    }
 
-	@PostMapping
-	public ResponseEntity<AccountsPayable> insert(@RequestBody AccountsPayable obj) {
-		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
-	}
+    // Insert accounts
+    @PostMapping
+    public ResponseEntity<AccountsPayable> insert(@RequestBody AccountsPayable obj) {
+        obj = service.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).body(obj);
+    }
 
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		service.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+    // Delete accounts
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<AccountsPayable> update(@PathVariable Long id, @RequestBody AccountsPayable obj) {
-		obj = service.update(id, obj);
-		return ResponseEntity.ok().body(obj);
-	}
+    // Update accounts
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<AccountsPayable> update(@PathVariable Long id, @RequestBody AccountsPayable obj) {
+        obj = service.update(id, obj);
+        return ResponseEntity.ok().body(obj);
+    }
 }
